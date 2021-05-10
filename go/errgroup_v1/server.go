@@ -51,7 +51,7 @@ func Hello(w http.ResponseWriter, req *http.Request) {
 }
 
 func Bye(w http.ResponseWriter, req *http.Request) {
-	io.WriteString(w, "bye")
+	io.WriteString(w, "Bye")
 }
 
 // server
@@ -59,6 +59,8 @@ type Server struct {
 	name    string
 	address string
 	port    string
+
+	serveMux http.ServeMux
 	handles []*ServerHandle
 }
 
@@ -75,9 +77,10 @@ func NewServer(opt ...ServerOption) *Server {
 
 func (s *Server) Start() error {
 	for _, handle := range s.handles {
-		http.HandleFunc(handle.name, handle.fn)
+		s.serveMux.HandleFunc(handle.name, handle.fn)
 	}
-	err := http.ListenAndServe(s.address+":"+s.port, nil)
+
+	err := http.ListenAndServe(s.address+":"+s.port, &s.serveMux)
 	if err != nil {
 		return err
 	}

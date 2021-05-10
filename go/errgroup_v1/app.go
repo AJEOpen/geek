@@ -6,6 +6,7 @@ import (
 	"fmt"
 	"golang.org/x/sync/errgroup"
 	_ "home_work/go/errgroup/dao"
+	"log"
 	"os"
 	"os/signal"
 	"syscall"
@@ -19,8 +20,8 @@ type App struct {
 
 func NewApp() *App {
 	ctx, cancel := context.WithCancel(context.Background())
-	helloSvr := NewServer(ServerName("hello"), Address("127.0.0.1"), Port(223344), AddHandle("/hello", Hello))
-	byeSvr := NewServer(ServerName("bye"), Address("127.0.0.1"), Port(334455), AddHandle("/bye", Bye))
+	helloSvr := NewServer(ServerName("hello"), Address("192.168.12.103"), Port(22334), AddHandle("/hello", Hello))
+	byeSvr := NewServer(ServerName("bye"), Address("192.168.12.103"), Port(22335), AddHandle("/bye", Bye))
 	return &App{
 		ctx:     ctx,
 		servers: []*Server{helloSvr, byeSvr},
@@ -68,4 +69,10 @@ func (a *App) Stop() error {
 
 func main() {
 	fmt.Println("app")
+
+	app := NewApp()
+	err := app.Run()
+	if err != nil {
+		log.Fatal("app run err = ", err.Error())
+	}
 }
