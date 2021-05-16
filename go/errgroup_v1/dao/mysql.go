@@ -5,6 +5,7 @@ import (
 	"fmt"
 	_ "github.com/go-sql-driver/mysql"
 	"log"
+	"net"
 	"time"
 )
 
@@ -42,4 +43,6 @@ func init() {
 		log.Println("数据库连接失败: " + MysqlDbErr.Error())
 		//panic("数据库链接失败: " + MysqlDbErr.Error())
 	}
+
+	net.TCPListener{}
 }
